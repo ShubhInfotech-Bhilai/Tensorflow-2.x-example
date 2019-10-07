@@ -22,6 +22,10 @@
   - ##### [004-自定义Layer层并通过`keras.Sequential`进行训练](./01_FC/README.md)
   
   - ##### [005-自定义Layer层并通过自定义Model搭建模型](./01_FC/README.md)
+  
+  - ###### [006-模型的加载与保存]()
+  
+    - `model.save_weights(),model.save()`
 
 
 
