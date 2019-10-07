@@ -20,7 +20,7 @@
 
   分别自定义一个Layer层和一个Model类来完成模型的搭建与训练，这个Model类继承自`tf.keras.Model`，因此Model类同样拥有`model.fit(),model.compile()`等方法。
 
-- #### 示例六：模型的保存于加载
+- #### 示例六：模型的保存与加载的三种方法 [Version1](./Example_06/V1)，[Version2](./Example_06/V2)，[Version3](./Example_06/V3)
 
   模型的保存于加载一共有三种模式：
 
