@@ -25,7 +25,7 @@
   
   - ###### [006-模型的加载与保存]()
   
-    - `model.save_weights(),model.save()`
+    - `model.save_weights(),model.save(),tf.saved_model`
 
 
 

@@ -20,6 +20,14 @@
 
   分别自定义一个Layer层和一个Model类来完成模型的搭建与训练，这个Model类继承自`tf.keras.Model`，因此Model类同样拥有`model.fit(),model.compile()`等方法。
 
+- #### 示例六：模型的保存于加载
+
+  模型的保存于加载一共有三种模式：
+
+  - `save/load weights`：最轻量级，只保存网络的参数，其它状态通过不管，适用于有源代码的情况
+  - `save/load entire model`：最粗暴，保存所有参数级状态，可以完美进行恢复
+  - `saved_model`：一种保存模型的通用格式，跟pytorch对应的ONNX一样，可直接将模型拿去部署而不需要源代码。例如：用C++来解析这一模型完成部署。
+
 #### [返回主页](../README.md)
 
 
