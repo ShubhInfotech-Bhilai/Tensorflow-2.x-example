@@ -27,6 +27,8 @@
   - `save/load weights`：最轻量级，只保存网络的参数，其它状态通过不管，适用于有源代码的情况
   - `save/load entire model`：最粗暴，保存所有参数级状态，可以完美进行恢复
   - `saved_model`：一种保存模型的通用格式，跟pytorch对应的ONNX一样，可直接将模型拿去部署而不需要源代码。例如：用C++来解析这一模型完成部署。
+  
+- #### 示例七：保存模型并完成追加训练[Version1](Example_07/train.py)
 
 #### [返回主页](../README.md)
 
