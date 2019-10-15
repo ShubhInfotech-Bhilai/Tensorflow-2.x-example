@@ -5,6 +5,7 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 tf.random.set_seed(100)
 
+
 def preprocess(x, y):
     x = tf.cast(x, dtype=tf.float32) / 255.
     y = tf.cast(tf.squeeze(y), dtype=tf.int64)
@@ -21,50 +22,47 @@ def gen_batch(x, y, batch_size):
 class VGG13_Model(tf.keras.Model):
     def __init__(self):
         super(VGG13_Model, self).__init__()
-        self.conv_1 = Conv2D(filters=64, kernel_size=3, padding='same', activation=tf.nn.relu)  # [b,32,32,3]
-        self.conv_2 = Conv2D(filters=64, kernel_size=3, padding='same', activation=tf.nn.relu)
-        self.max_poo1_1 = MaxPool2D(pool_size=[2, 2], strides=2, padding='same')  # shape: [b,16,16,64]
 
-        self.conv_3 = Conv2D(filters=128, kernel_size=3, padding='same', activation=tf.nn.relu)
-        self.conv_4 = Conv2D(filters=128, kernel_size=3, padding='same', activation=tf.nn.relu)
-        self.max_poo1_2 = MaxPool2D(pool_size=[2, 2], strides=2, padding='same')  # shape: [b,8,8,128]
+        layers_conv = [Conv2D(filters=64, kernel_size=3, padding='same', activation=tf.nn.relu),  # [b,32,32,3]
+                       Conv2D(filters=64, kernel_size=3, padding='same', activation=tf.nn.relu),
+                       MaxPool2D(pool_size=[2, 2], strides=2, padding='same'),  # shape: [b,16,16,64]
 
-        self.conv_5 = Conv2D(filters=256, kernel_size=3, padding='same', activation=tf.nn.relu)
-        self.conv_6 = Conv2D(filters=256, kernel_size=3, padding='same', activation=tf.nn.relu)
-        self.max_poo1_3 = MaxPool2D(pool_size=[2, 2], strides=2, padding='same')  # shape: [b,4,4,256]
+                       Conv2D(filters=128, kernel_size=3, padding='same', activation=tf.nn.relu),
+                       Conv2D(filters=128, kernel_size=3, padding='same', activation=tf.nn.relu),
+                       MaxPool2D(pool_size=[2, 2], strides=2, padding='same'),  # shape: [b,8,8,128]
 
-        self.conv_7 = Conv2D(filters=512, kernel_size=3, padding='same', activation=tf.nn.relu)
-        self.conv_8 = Conv2D(filters=512, kernel_size=3, padding='same', activation=tf.nn.relu)
-        self.max_poo1_4 = MaxPool2D(pool_size=[2, 2], strides=2, padding='same')  # shape: [b,2,2,512]
+                       Conv2D(filters=256, kernel_size=3, padding='same', activation=tf.nn.relu),
+                       Conv2D(filters=256, kernel_size=3, padding='same', activation=tf.nn.relu),
+                       MaxPool2D(pool_size=[2, 2], strides=2, padding='same'),  # shape: [b,4,4,256]
 
-        self.conv_9 = Conv2D(filters=512, kernel_size=3, padding='same', activation=tf.nn.relu)
-        self.conv_10 = Conv2D(filters=512, kernel_size=3, padding='same', activation=tf.nn.relu)
-        self.max_poo1_5 = MaxPool2D(pool_size=[2, 2], strides=2, padding='same')  # shape: [b,1,1,512]
+                       Conv2D(filters=512, kernel_size=3, padding='same', activation=tf.nn.relu),
+                       Conv2D(filters=512, kernel_size=3, padding='same', activation=tf.nn.relu),
+                       MaxPool2D(pool_size=[2, 2], strides=2, padding='same'),  # shape: [b,2,2,512]
 
-        self.fc_11 = Dense(units=256, activation=tf.nn.relu)  # shape: [b,256]
-        self.fc_12 = Dense(units=128, activation=tf.nn.relu)  # shape: [b,256]
-        self.fc_13 = Dense(units=100, activation=None)  # shape: [b,100]
+                       Conv2D(filters=512, kernel_size=3, padding='same', activation=tf.nn.relu),
+                       Conv2D(filters=512, kernel_size=3, padding='same', activation=tf.nn.relu),
+                       MaxPool2D(pool_size=[2, 2], strides=2, padding='same')]  # shape: [b,1,1,512]
+        self.seq_conv = tf.keras.Sequential(layers=layers_conv)
+        layers_fc = [Dense(units=256, activation=tf.nn.relu),  # shape: [b,256]
+                     Dense(units=128, activation=tf.nn.relu),  # shape: [b,256]
+                     Dense(units=100, activation=None)]  # shape: [b,100]
+        self.seq_fc = tf.keras.Sequential(layers_fc)
 
     def call(self, inputs, training=None):
-        out = self.conv_1(inputs)
-        out = self.conv_2(out)
-        out = self.max_poo1_1(out)
-        out = self.conv_3(out)
-        out = self.conv_4(out)
-        out = self.max_poo1_2(out)
-        out = self.conv_5(out)
-        out = self.conv_6(out)
-        out = self.max_poo1_3(out)
-        out = self.conv_7(out)
-        out = self.conv_8(out)
-        out = self.max_poo1_4(out)
-        out = self.conv_9(out)
-        out = self.conv_10(out)
-        out = self.max_poo1_5(out)
-        out = tf.reshape(out, [-1, 512])
-        out = self.fc_11(out)
-        out = self.fc_12(out)
-        out = self.fc_13(out)
+        """
+        只要一个操作被定义为是标准的tensorflow Layer类（含义__init__,call,build等方法）
+        都可以通过Sequential 类来完成前向传播
+        例如，此处的reshape 操作，其实可以通过Flatten() 这个Layerl类来完成，也就是上面的conv 部分和fc部分，通过一个Sequential就能实现整个前向传播
+        如上一个示例Example_02
+
+        :param inputs:
+        :param training:
+        :return:
+        """
+
+        conv_out = self.seq_conv(inputs)
+        out = tf.reshape(conv_out, [-1, 512])
+        out = self.seq_fc(out)
         return out
 
 
