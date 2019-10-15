@@ -3,6 +3,8 @@
 
   - ##### [01-普通前馈神经网络](./01_FC/README.md)
 
+  - ##### [02-卷积神经网络](./02_CNN/README.md)
+
 - #### 模型结果
 
 - #### 用法示例索引
@@ -30,6 +32,14 @@
     - `model.save_weights(),model.save(),tf.saved_model`
     
   - ##### [007-保存模型并完成追加训练](./01_FC/README.md)
+  
+  - ##### [008-卷积层的使用](./02_CNN/README.md)
+  
+    - `tf.keras.layers.Conv2d(),tf.keras.layers.Flatten()`
+  
+  - ##### [009-BN层的使用](./02_CNN/README.md)
+  
+    - `tf.keras.layers.BatchNormalization()`
 
 
 
